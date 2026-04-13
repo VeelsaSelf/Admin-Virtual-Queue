@@ -47,7 +47,7 @@
                     : (request()->routeIs('orders') ? 'orders'
                     : (request()->routeIs('payments') ? 'payments'
                     : (request()->routeIs('menu-management') ? 'menu-management'
-                    : (request()->routeIs('staff-management') ? 'staff-management'
+                    : ((request()->routeIs('staff-management') || request()->routeIs('staff-edit') || request()->routeIs('staff-add')) ? 'staff-management'
                     : (request()->routeIs('sales-report') ? 'sales-report' : 'dashboard')))));
             @endphp
 

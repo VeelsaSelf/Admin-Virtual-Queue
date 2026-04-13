@@ -4,9 +4,35 @@
 
 @section('content')
 @php
-    /* Pengaman biar gak error 500 kalau Controller lupa ngirim data */
-    $staffs = $staffs ?? new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
-    $perPage = $perPage ?? 10;
+    $dummyStaffs = [
+        [
+            'name' => 'Miguela Veloso',
+            'role' => 'Cashier',
+            'email' => 'm.veloso23@gmail.com',
+            'phone' => '+1-418-543-8090',
+            'status' => 'inactive',
+            'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+            'checked' => false,
+        ],
+        [
+            'name' => 'Miguela Veloso',
+            'role' => 'Cashier',
+            'email' => 'm.veloso23@gmail.com',
+            'phone' => '+1-418-543-8090',
+            'status' => 'inactive',
+            'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+            'checked' => true,
+        ],
+        [
+            'name' => 'Miguela Veloso',
+            'role' => 'Cashier',
+            'email' => 'm.veloso23@gmail.com',
+            'phone' => '+1-418-543-8090',
+            'status' => 'inactive',
+            'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+            'checked' => false,
+        ],
+    ];
 @endphp
 
 <style>
@@ -174,12 +200,13 @@ tbody td{padding:13px 16px;font-size:13.5px;color:var(--text);vertical-align:mid
 .cb{width:17px;height:17px;border:1.5px solid var(--border);border-radius:5px;cursor:pointer;accent-color:var(--brown)}
 
 .av{
-  width:38px;height:38px;border-radius:50%;object-fit:cover;
+  width:36px;height:36px;border-radius:8px;object-fit:cover;
   border:2px solid var(--border);background:var(--caramel-lt);
   display:flex;align-items:center;justify-content:center;
   font-size:13px;font-weight:700;color:var(--caramel);overflow:hidden;
 }
 .av img{width:100%;height:100%;object-fit:cover}
+.name-cell{display:flex;align-items:center;gap:12px}
 
 .pill{
   display:inline-block;padding:4px 13px;border-radius:20px;
@@ -241,6 +268,90 @@ tbody td{padding:13px 16px;font-size:13.5px;color:var(--text);vertical-align:mid
   padding:10px 22px;background:var(--brown);color:#fff;border:none;border-radius:9px;
   font-weight:600;cursor:pointer;
 }
+.detail-modal{
+  width:100%;
+  max-width:760px;
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 18px 45px rgba(44,21,3,.18);
+  overflow:hidden;
+}
+.detail-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid #EEE4DA;
+}
+.detail-profile{display:flex;align-items:center;gap:12px}
+.detail-profile .avatar{
+  width:46px;height:46px;border-radius:10px;object-fit:cover;border:1px solid var(--border);
+}
+.detail-name{font-size:33px;font-weight:700;line-height:1.1;color:#1F2937}
+.detail-close{
+  border:none;background:transparent;color:#6B7280;font-size:28px;line-height:1;cursor:pointer;
+  width:36px;height:36px;border-radius:8px;
+}
+.detail-close:hover{background:#F7F3EE}
+.detail-body{padding:18px 20px 22px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.detail-field label{display:block;font-size:13px;color:#6b7280;margin-bottom:6px}
+.detail-field input{
+  width:100%;padding:11px 12px;border:1.5px solid var(--border);border-radius:10px;
+  background:#FAF8F5;font-size:13px;color:#374151;
+}
+.delete-modal{
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 20px 45px rgba(44,21,3,.22);
+  padding:24px 22px 18px;
+  text-align:center;
+}
+.delete-icon{
+  width:30px;height:30px;border-radius:999px;margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  background:#FDECEF;color:#B4234D;font-size:16px;font-weight:700;
+}
+.delete-title{
+  font-size:29px;
+  font-weight:700;
+  color:#2C1A06;
+  margin-bottom:6px;
+}
+.delete-text{
+  font-size:18px;
+  color:#7D6A5A;
+  line-height:1.45;
+  margin-bottom:14px;
+}
+.delete-actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+.btn-delete-cancel{
+  min-width:110px;
+  height:42px;
+  border:none;
+  border-radius:10px;
+  background:#F3F3F3;
+  color:#2A2A2A;
+  font-size:15px;
+  font-weight:500;
+  cursor:pointer;
+}
+.btn-delete-confirm{
+  min-width:110px;
+  height:42px;
+  border:none;
+  border-radius:10px;
+  background:#D90445;
+  color:#fff;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn-delete-confirm:hover{background:#bf003d}
 
 /* BULK BAR */
 .bulk-bar{
@@ -334,7 +445,7 @@ tbody td{padding:13px 16px;font-size:13.5px;color:var(--text);vertical-align:mid
           <i class="ph ph-magnifying-glass"></i>
           <input type="text" class="search-input" placeholder="Search by name, role..." oninput="filterTable(this.value)">
         </div>
-        <button class="btn-add" onclick="openModal()"><i class="ph ph-plus"></i> Add Staff</button>
+        <a href="{{ route('staff-add') }}" class="btn-add"><i class="ph ph-plus"></i> Add Staff</a>
       </div>
 
       <div class="table-card">
@@ -344,42 +455,55 @@ tbody td{padding:13px 16px;font-size:13.5px;color:var(--text);vertical-align:mid
               <th style="width:44px"><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th>
               <th>Name</th>
               <th>Role</th>
+              <th>Email</th>
+              <th>Phone Number</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="tbody">
-            @forelse($staffs as $staff)
+            @foreach($dummyStaffs as $staff)
             <tr>
-              <td><input type="checkbox" class="row-cb" onchange="updateBulk()"></td>
-              <td><strong>{{ $staff->name }}</strong></td>
-              <td>{{ $staff->role }}</td>
-              <td><span class="pill {{ $staff->status === 'active' ? 'pill-active' : 'pill-inactive' }}">{{ $staff->status }}</span></td>
+              <td><input type="checkbox" class="row-cb cb" onchange="updateBulk()" {{ $staff['checked'] ? 'checked' : '' }}></td>
+              <td>
+                <div class="name-cell">
+                  <div class="av"><img src="{{ $staff['avatar'] }}" alt="{{ $staff['name'] }}"></div>
+                  <strong>{{ $staff['name'] }}</strong>
+                </div>
+              </td>
+              <td>{{ $staff['role'] }}</td>
+              <td>{{ $staff['email'] }}</td>
+              <td>{{ $staff['phone'] }}</td>
+              <td><span class="pill {{ $staff['status'] === 'active' ? 'pill-active' : 'pill-inactive' }}">{{ ucfirst($staff['status']) }}</span></td>
               <td>
                 <div class="actions">
-                  <button class="act-btn"><i class="ph ph-pencil"></i></button>
-                  <button class="act-btn"><i class="ph ph-trash"></i></button>
+                  <button
+                    class="act-btn"
+                    onclick="openDetailModal(this)"
+                    data-name="{{ $staff['name'] }}"
+                    data-role="{{ $staff['role'] }}"
+                    data-email="{{ $staff['email'] }}"
+                    data-phone="{{ $staff['phone'] }}"
+                    data-status="{{ ucfirst($staff['status']) }}"
+                    data-avatar="{{ $staff['avatar'] }}"
+                  ><i class="ph ph-eye"></i></button>
+                  <a href="{{ route('staff-edit') }}" class="act-btn"><i class="ph ph-pencil"></i></a>
+                  <button class="act-btn" onclick="openDeleteModal('{{ $staff['name'] }}')"><i class="ph ph-trash"></i></button>
                 </div>
               </td>
             </tr>
-            @empty
-            <tr><td colspan="5" style="text-align:center;padding:40px">Tidak ada data.</td></tr>
-            @endforelse
+            @endforeach
           </tbody>
         </table>
 
         <div class="table-foot">
           <div class="showing">
-            Showing {{ $staffs->count() }} of {{ $staffs->total() }} entries
+            Showing {{ count($dummyStaffs) }} of {{ count($dummyStaffs) }} entries
           </div>
           <div class="pages">
-              @if(!$staffs->onFirstPage())
-                <a href="{{ $staffs->previousPageUrl() }}" class="pg"><i class="ph ph-caret-left"></i></a>
-              @endif
-              <span class="pg active">{{ $staffs->currentPage() }}</span>
-              @if($staffs->hasMorePages())
-                <a href="{{ $staffs->nextPageUrl() }}" class="pg"><i class="ph ph-caret-right"></i></a>
-              @endif
+              <span class="pg disabled"><i class="ph ph-caret-left"></i></span>
+              <span class="pg active">1</span>
+              <span class="pg disabled"><i class="ph ph-caret-right"></i></span>
           </div>
         </div>
       </div>
@@ -406,9 +530,93 @@ tbody td{padding:13px 16px;font-size:13.5px;color:var(--text);vertical-align:mid
   </div>
 </div>
 
+<div class="overlay" id="detailOverlay" onclick="closeDetailModal(event)">
+  <div class="detail-modal" onclick="event.stopPropagation()">
+    <div class="detail-head">
+      <div class="detail-profile">
+        <img id="detailAvatar" class="avatar" src="" alt="avatar">
+        <h2 id="detailName" class="detail-name">Miguela Veloso</h2>
+      </div>
+      <button type="button" class="detail-close" onclick="closeDetailModal()">&times;</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-grid">
+        <div class="detail-field">
+          <label>Username</label>
+          <input id="detailUsername" type="text" readonly>
+        </div>
+        <div class="detail-field">
+          <label>Phone Number</label>
+          <input id="detailPhone" type="text" readonly>
+        </div>
+        <div class="detail-field">
+          <label>Email Address</label>
+          <input id="detailEmail" type="text" readonly>
+        </div>
+        <div class="detail-field">
+          <label>Joined Date</label>
+          <input type="text" value="31 January 2026" readonly>
+        </div>
+        <div class="detail-field">
+          <label>Role</label>
+          <input id="detailRole" type="text" readonly>
+        </div>
+        <div class="detail-field">
+          <label>Status</label>
+          <input id="detailStatus" type="text" readonly>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="deleteOverlay" onclick="closeDeleteModal(event)">
+  <div class="delete-modal" onclick="event.stopPropagation()">
+    <div class="delete-icon">!</div>
+    <h3 class="delete-title">Delete Staff</h3>
+    <p class="delete-text">
+      Are you sure you want to delete <span id="deleteStaffName">this person</span>?<br>
+      This action cannot be undone.
+    </p>
+    <div class="delete-actions">
+      <button type="button" class="btn-delete-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button type="button" class="btn-delete-confirm" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
 <script>
 function openModal() { document.getElementById('overlay').classList.add('open') }
 function closeModal() { document.getElementById('overlay').classList.remove('open') }
+function openDetailModal(button) {
+  document.getElementById('detailName').innerText = button.dataset.name;
+  document.getElementById('detailUsername').value = button.dataset.name.toLowerCase().replace(/\s+/g, '.');
+  document.getElementById('detailPhone').value = button.dataset.phone;
+  document.getElementById('detailEmail').value = button.dataset.email;
+  document.getElementById('detailRole').value = button.dataset.role;
+  document.getElementById('detailStatus').value = button.dataset.status;
+  document.getElementById('detailAvatar').src = button.dataset.avatar;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+function closeDetailModal(event) {
+  if (!event || event.target.id === 'detailOverlay') {
+    document.getElementById('detailOverlay').classList.remove('open');
+  }
+}
+let selectedDeleteName = '';
+function openDeleteModal(name) {
+  selectedDeleteName = name || 'this person';
+  document.getElementById('deleteStaffName').innerText = selectedDeleteName;
+  document.getElementById('deleteOverlay').classList.add('open');
+}
+function closeDeleteModal(event) {
+  if (!event || event.target.id === 'deleteOverlay') {
+    document.getElementById('deleteOverlay').classList.remove('open');
+  }
+}
+function confirmDelete() {
+  closeDeleteModal();
+}
 
 function filterTable(q) {
   q = q.toLowerCase();
@@ -427,5 +635,7 @@ function updateBulk() {
   document.getElementById('bulkCount').innerText = count;
   document.getElementById('bulkBar').classList.toggle('show', count > 0);
 }
+
+updateBulk();
 </script>
 @endsection

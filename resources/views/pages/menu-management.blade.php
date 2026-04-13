@@ -66,6 +66,87 @@
 .page-btn:hover { background:#FDF6EE; border-color:#C49060; color:#8B5E1A; }
 .page-btn.active { background:#8B5E1A; border-color:#8B5E1A; color:#fff; font-weight:700; }
 .page-btn:disabled { opacity:.4; cursor:default; }
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.32);
+    backdrop-filter: blur(2px);
+    z-index: 120;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.menu-overlay.open { display: flex; }
+.menu-modal {
+    width: 100%;
+    max-width: 760px;
+    background: #fff;
+    border: 1.5px solid #E5DDD5;
+    border-radius: 16px;
+    box-shadow: 0 24px 50px rgba(44, 26, 6, 0.18);
+    overflow: hidden;
+}
+.menu-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #EFEAE4;
+}
+.menu-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.menu-profile img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #F5EFE8;
+}
+.menu-profile-name {
+    font-size: 30px;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #1f2937;
+}
+.menu-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6b7280;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+.menu-close:hover { background: #F9F5EF; color: #374151; }
+.menu-modal-body {
+    padding: 20px;
+}
+.menu-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 16px;
+}
+.menu-field label {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 7px;
+}
+.menu-field input {
+    width: 100%;
+    border: 1.5px solid #E5DDD5;
+    border-radius: 10px;
+    background: #F9F7F4;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #374151;
+}
 </style>
 
 @php
@@ -192,7 +273,7 @@ $menuItems = array_fill(0, 10, [
                     <td>
                         <div style="display:flex; gap:6px; align-items:center;">
                             {{-- View --}}
-                            <button class="action-btn" title="View">
+                            <button class="action-btn" title="View" onclick="openMenuModal()">
                                 <svg width="15" height="15" viewBox="0 0 20 14" fill="none">
                                     <path d="M1 7C1 7 4 1 10 1s9 6 9 6-3 6-9 6S1 7 1 7z"
                                           stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
@@ -258,5 +339,54 @@ $menuItems = array_fill(0, 10, [
     </div>
 
 </div>
+
+<div id="menuDetailOverlay" class="menu-overlay" onclick="closeMenuModal(event)">
+    <div class="menu-modal" role="dialog" aria-modal="true" aria-label="Menu detail" onclick="event.stopPropagation()">
+        <div class="menu-modal-head">
+            <div class="menu-profile">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=90&h=90&fit=crop" alt="Menu image">
+                <div class="menu-profile-name">Chicken Teriyaki Rice Bowl</div>
+            </div>
+            <button class="menu-close" type="button" aria-label="Close" onclick="closeMenuModal()">&times;</button>
+        </div>
+
+        <div class="menu-modal-body">
+            <div class="menu-detail-grid">
+                <div class="menu-field">
+                    <label>Category</label>
+                    <input type="text" value="Food" readonly>
+                </div>
+                <div class="menu-field">
+                    <label>Price</label>
+                    <input type="text" value="Rp 42.000" readonly>
+                </div>
+                <div class="menu-field">
+                    <label>Stock</label>
+                    <input type="text" value="Out of Stock" readonly>
+                </div>
+                <div class="menu-field">
+                    <label>Status</label>
+                    <input type="text" value="Not Available" readonly>
+                </div>
+                <div class="menu-field" style="grid-column:1/-1;">
+                    <label>Description</label>
+                    <input type="text" value="Savory teriyaki chicken served over warm rice." readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openMenuModal() {
+    document.getElementById('menuDetailOverlay').classList.add('open');
+}
+
+function closeMenuModal(event) {
+    if (!event || event.target.id === 'menuDetailOverlay') {
+        document.getElementById('menuDetailOverlay').classList.remove('open');
+    }
+}
+</script>
 
 @endsection
