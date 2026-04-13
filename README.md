@@ -1,9 +1,9 @@
 # Mau Kopi — Laravel Frontend
 
-Pixel-perfect Laravel + Tailwind CSS implementation of the Mau Kopi POS dashboard UI.
+Laravel + Tailwind CSS implementation of the Mau Kopi POS dashboard UI.
 
 ## Tech Stack
-- Laravel 11 (Blade templating)
+- Laravel 11
 - Tailwind CSS v3
 - Alpine.js v3
 - Vite
